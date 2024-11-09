@@ -14,8 +14,8 @@ if (registrationForm) {
 
 // Function to validate the username
 function validateUserName() {
+  console.log("Validating username");
   const nameVal = userName.value.trim().toLowerCase();
-  console.log("Validating username:", nameVal);
 
   if (nameVal === "") {
     alert("The username cannot be blank.");
@@ -56,8 +56,8 @@ function validateUserName() {
 
 // Function to validate email
 function validateEmail() {
+  console.log("Validating email");
   const emailVal = email.value.trim().toLowerCase();
-  console.log("Validating email:", emailVal);
 
   // Check for basic email format
   const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -80,8 +80,8 @@ function validateEmail() {
 
 // Function to validate password
 function validatePassword() {
+  console.log("Validating password");
   const passwordVal = password.value;
-  console.log("Validating password:", passwordVal);
 
   if (passwordVal.length < 12) {
     alert("Passwords must be at least 12 characters long.");
