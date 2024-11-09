@@ -1,45 +1,62 @@
 console.log("i am linked");
-const userName = document.getElementsByClassName("userName")[0];
+const userName = document.querySelector(".userName");
 console.log(userName);
-const uName = document.querySelector(".userName");
 const email = document.querySelector("#email");
 const password = document.querySelector("#password");
-
-const registrationForm = document.querySelector("form");
+const confirmPassword = document.querySelector("#confirmPassword");
+const terms = document.querySelector("#terms");
+const registrationForm = document.querySelector("#registrationForm");
 console.log(registrationForm);
 
 if (registrationForm) {
-  registrationForm.addEventListener("submit", validateRegistration);
+  registrationForm.addEventListener("submit", Registration);
 }
 
-registration.addEventListener("submit", validateRegistration);
+function validateUserName() {
+  const nameVal = userName.value.toLowerCase();
 
-function validateRegistration(evt) {
-  evt.preventDefault();
-}
-
-//Function to handle registration and save user data to local storage
-function registerUser(event) {
-  evt.preventDefault();
-
-  const userNameVal = validateUserName();
-  if (userNameVal === false) {
-    event.returnValue = false;
+  if (nameVal === "") {
+    alert("The username cannot be blank.");
+    userName.focus();
     return false;
   }
+
   if (nameVal.length < 4) {
     alert("The username must be at least four characters long.");
-    uName.focus;
+    userName.focus;
     return false;
   }
 
-  const emailVal = validateEmail();
-  if (
-    !emailVal ||
-    emailVal.indexOf("@") < 1 ||
-    emailVal.lastIndexOf(".") - emailVal.indexOf("@") < 2
-  ) {
-    alert("Please enter a valid email.");
+  // Check for at least two unique characters
+  const uniqueChars = new Set(NameVal);
+  if (uniqueChars.size < 2) {
+    alert("The username must contain at least two unique characters.");
+    uName.focus();
+    return false;
+  }
+
+  // Check for no special characters or whitespace
+  const validateuUsernamePattern = /^[a-zA-Z0-9]+$/;
+  if (!validateuUsernamePattern.test(nameVal)) {
+    alert("The username cannot contain any special characters or whitespace.");
+    uName.focus();
+    return false;
+  }
+
+  if (localStorage.getItem(`user_${nameVal}`)) {
+    alert("The user name is already taken.");
+    return false;
+  }
+
+  return nameVal;
+}
+
+// Function to validate email
+function validateEmail() {
+  const emailVal = email.value.toLowerCase();
+
+  if (!emailVal || !emailVal.includes("@") || !emailVal.includes(".")) {
+    alert("Please enter a valid email address.");
     email.focus();
     return false;
   }
@@ -51,52 +68,129 @@ function registerUser(event) {
     return false;
   }
 
-  const passwordVal = validatePassword();
-  if (!passwordVal) return false;
+  return emailVal;
 
-  const passwordVal2 = document.querySelector("#confirmPassword").value;
-  if (passwordVal !== passwordVal2) {
-    alert("Passwords do not match.");
-    return false;
+  function validatePassword() {
+    const passwordVal = password.value;
+
+    if (passwordVal.length < 12) {
+      alert("Passwords must be at least 12 characters long.");
+      password.focus();
+      return false;
+    }
+
+    if (!/[A-Z]/.test(passwordVal) || !/[a-z]/.test(passwordVal)) {
+      alert(
+        "Passwords must have at least one uppercase and one lowercase letter."
+      );
+      password.focus();
+      return false;
+    }
+
+    if (!/[0-9]/.test(passwordVal)) {
+      alert("Passwords must contain at least one number.");
+      password.focus();
+      return false;
+    }
+
+    if (!/[!@#$%^&*]/.test(passwordVal)) {
+      alert("Passwords must contain at least one special character.");
+      password.focus();
+      return false;
+    }
+
+    if (/password/i.test(passwordVal)) {
+      alert("Passwords cannot contain the word 'password'.");
+      password.focus();
+      return false;
+    }
+
+    if (passwordVal.includes(userName.value)) {
+      alert("Passwords cannot contain the username.");
+      password.focus();
+      return false;
+    }
+
+    if (passwordVal !== confirmPassword.value) {
+      alert("Passwords do not match.");
+      confirmPassword.focus();
+      return false;
+    }
+
+    return passwordVal;
   }
 
-  //   alert(`Name: ${nameVal}
-  //         Email: ${emailVal}
-  //         Password: ...that's a secret`);
+  // Main function to register user and save to local storage
+  function registerUser(event) {
+    event.preventDefault();
 
-  //   return true;
-  // }
+    const userNameVal = validateUserName();
+    if (!userNameVal) return false;
 
-  function validateUserName() {
-    const uName = document.querySelector(".userName"); // Ensure this selects the correct element
-    const nameVal = uName.value;
+    const emailVal = validateEmail();
+    if (!emailVal) return false;
 
-    // Check user name value minimum length
-    if (nameVal.length < 4) {
-      alert("YThe username must be at least four characters long.");
-      uName.focus();
+    const passwordVal = validatePassword();
+    if (!passwordVal) return false;
+
+    if (!terms.checked) {
+      alert("You must accept the terms and conditions.");
+      terms.focus();
       return false;
     }
 
-    // Check for at least two unique characters
-    const uniqueChars = new Set(NameVal);
-    if (uniqueChars.size < 2) {
-      alert("The username must contain at least two unique characters.");
-      uName.focus();
+    const userData = {
+      username: userNameVal,
+      email: emailVal,
+      password: passwordVal, // In a real app, you'd hash the password before storing
+    };
+
+    localStorage.setItem(`user_${userNameVal}`, JSON.stringify(userData));
+    alert("Registration successful!");
+
+    registrationForm.reset();
+    return true;
+  }
+
+  // Login Form Validation Functions
+  const loginForm = document.querySelector("#loginForm");
+  if (loginForm) {
+    loginForm.addEventListener("submit", validateLogin);
+  }
+
+  function validateLogin(event) {
+    event.preventDefault();
+
+    const loginUsername = document
+      .querySelector("#loginUsername")
+      .value.toLowerCase();
+    const loginPassword = document.querySelector("#loginPassword").value;
+    const keepLoggedIn = document.querySelector("#keepLoggedIn").checked;
+
+    if (!loginUsername) {
+      alert("The username cannot be blank.");
+      document.querySelector("#loginUsername").focus();
       return false;
     }
 
-    // Check for no special characters or whitespace
-    const validateuUsernamePattern = /^[a-zA-Z0-9]+$/;
-    if (!validateuUsernamePattern.test(nameVal)) {
-      alert(
-        "The username cannot contain any special characters or whitespace."
-      );
-      uName.focus();
+    const storedUser = localStorage.getItem(`user_${loginUsername}`);
+    if (!storedUser) {
+      alert("Username does not exist.");
+      document.querySelector("#loginUsername").focus();
       return false;
     }
 
-    // If all validations above pass, return the username value
-    return nameVal;
+    const userData = JSON.parse(storedUser);
+    if (userData.password !== loginPassword) {
+      alert("Incorrect password.");
+      document.querySelector("#loginPassword").focus();
+      return false;
+    }
+
+    alert(
+      `Login successful!${keepLoggedIn ? " You will remain logged in." : ""}`
+    );
+    loginForm.reset();
+    return true;
   }
 }
