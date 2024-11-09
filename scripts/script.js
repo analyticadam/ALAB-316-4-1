@@ -1,63 +1,30 @@
-form.addEventListener("submit", validate);
+console.log("i am linked");
+const userName = document.getElementsByClassName("userName");
+console.log(userName);
 
-function validate(evt) {
-  const nameVal = validateName();
-  if (nameVal === false) {
+const registrationForm = document.querySelector("form");
+console.log(registrationForm);
+
+if (registrationForm) {
+  registrationForm.addEventListener("submit", validateRegistration);
+}
+
+//registration.addEventListener("submit", validateRegistration);
+
+function validateRegistration(evt) {
+  evt.preventDefault();
+
+  const userNameVal = validateUserName();
+  if (userNameVal === false) {
+    evt.returnValue = false;
+    return false;
+  }
+  if (nameVal < 4) {
     evt.returnValue = false;
     return false;
   }
 
   const emailVal = validateEmail();
-  if (emailVal === false) {
-    evt.returnValue = false;
-    return false;
-  }
-
-  const countryVal = validateCountry();
-  if (countryVal === false) {
-    evt.returnValue = false;
-    return false;
-  }
-
-  const zipVal = validateZipCode();
-  if (zipVal === false) {
-    evt.returnValue = false;
-    return false;
-  }
-
-  const passwordVal = validatePassword();
-  if (passwordVal === false) {
-    evt.returnValue = false;
-    return false;
-  }
-
-  alert(`Name: ${nameVal}
-        Email: ${emailVal}
-        Country: ${countryVal}
-        Zip Code: ${zipVal}
-        Password: ...that's a secret`);
-
-  return true;
-}
-
-function validateName() {
-  let nameVal = uName.value;
-
-  if (nameVal.length === 0) {
-    alert("Your name cannot be empty");
-    uName.focus();
-    return false;
-  }
-
-  return nameVal;
-}
-
-// Simple email validation
-// Using the event object's 'returnValue' property,
-// we can prevent form submission if the values are invalid
-function validateEmail() {
-  let emailVal = email.value;
-
   const atpos = emailVal.indexOf("@");
   const dotpos = emailVal.lastIndexOf(".");
 
@@ -77,34 +44,67 @@ function validateEmail() {
     return false;
   }
 
-  return emailVal;
-}
+  if (emailVal === false) {
+    evt.returnValue = false;
+    return false;
+  }
+  if (emailVal !== "example.com") {
+    if (passwordVal === false) {
+      evt.returnValue = false;
+      return false;
+    }
+  }
 
-function validateCountry() {
-  let countryVal = country.value;
-
-  if (countryVal.length === 0) {
-    alert("Your country cannot be empty");
-    country.focus();
+  const passwordVal = validatePassword();
+  if (passwordVal === false) {
+    evt.returnValue = false;
+    return false;
+  }
+  if (passwordVal !== nameVal) {
+    evt.returnValue = false;
+    return false;
+  }
+  if (passwordVal === passwordVal2) {
+    evt.returnValue = true;
+    return false;
+  }
+  const passwordVal2 = validatePassword();
+  if (passwordVal2 === false) {
+    evt.returnValue = false;
     return false;
   }
 
-  return countryVal;
+  if (passwordVal2 === passwordVal2) {
+    evt.returnValue = true;
+    return true;
+  }
+  alert(`Name: ${nameVal}
+        Email: ${emailVal}
+        Password: ...that's a secret`);
+
+  return true;
 }
 
-function validateZipCode() {
-  let zipVal = zip.value;
+function validateUserName() {
+  let nameVal = uName.value;
+  if (nameVal.length === 0) {
+    alert("Your name cannot be empty");
+    uName.focus();
+    return false;
+  }
+  return nameVal;
+}
 
-  if (zipVal.length === 0) {
-    alert("Your zip code cannot be empty");
-    zip.focus();
+//login.addEventListener("submit", validate);
+
+function validatelogin(evt) {
+  evt.preventDefault();
+  const nameVal = validateName();
+  if (nameVal === false) {
+    evt.returnValue = false;
     return false;
   }
 
-  return zipVal;
-}
-
-function validatePassword() {
   let passwordVal = password.value;
 
   if (passwordVal.length === 0) {
@@ -114,4 +114,19 @@ function validatePassword() {
   }
 
   return passwordVal;
+}
+
+function findUnique(str) {
+  // The variable that contains the unique values
+  let uniq = "";
+
+  for (let i = 0; i < str.length; i++) {
+    // Checking if the uniq contains the character
+    if (uniq.includes(str[i]) === false) {
+      // If the character not present in uniq
+      // Concatenate the character with uniq
+      uniq += str[i];
+    }
+  }
+  return uniq;
 }
