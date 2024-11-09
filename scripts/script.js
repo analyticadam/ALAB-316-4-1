@@ -15,6 +15,7 @@ if (registrationForm) {
 // Function to validate the username
 function validateUserName() {
   const nameVal = userName.value.trim().toLowerCase();
+  console.log("Validating username:", nameVal);
 
   if (nameVal === "") {
     alert("The username cannot be blank.");
@@ -56,6 +57,7 @@ function validateUserName() {
 // Function to validate email
 function validateEmail() {
   const emailVal = email.value.trim().toLowerCase();
+  console.log("Validating email:", emailVal);
 
   // Check for basic email format
   const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -79,6 +81,7 @@ function validateEmail() {
 // Function to validate password
 function validatePassword() {
   const passwordVal = password.value;
+  console.log("Validating password:", passwordVal);
 
   if (passwordVal.length < 12) {
     alert("Passwords must be at least 12 characters long.");
@@ -112,6 +115,7 @@ function validatePassword() {
     return false;
   }
 
+  // Check if passwords match
   if (passwordVal !== confirmPassword.value) {
     alert("Passwords do not match.");
     confirmPassword.focus();
@@ -124,6 +128,8 @@ function validatePassword() {
 // Main function to register user and save to local storage
 function registerUser(event) {
   event.preventDefault();
+
+  console.log("Register button clicked");
 
   const userNameVal = validateUserName();
   if (!userNameVal) return false;
